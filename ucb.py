@@ -1,8 +1,11 @@
 import requests
-import re
 import json
+from bs4 import BeautifulSoup
+import time
+import re
 
 url = 'https://www.uchuanbo.com/member/ajax/news_list.php'
+detail_url = 'https://www.uchuanbo.com/member/ajax/mediaaction.php'
 headers = {
     'Accept': 'application/json, text/javascript, */*; q=0.01',
     'Accept-Encoding': 'gzip, deflate, br',
@@ -18,32 +21,79 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest',
 }
-payload = {
-    'pagesize': 20,
-    'pagenumber': 1,
-    'keywords': '',
-    'category': '0',
-    'portal': 0,
-    'area': 0,
-    'prange': '0,100000000',
-    'record': 0,
-    'cansend': 0,
-    'linktype': 0,
-    'media_u_type': 0,
-    'orderby': 'listorder DESC'
-}
-
-r = requests.post(url, data=payload,
-                  headers=headers
-                  )
-
-text = r.text
-text = json.loads(text)
-print(text)
-
-p = re.compile('<tr.*?</tr>",')
-result = re.findall(p, text)
 
 
-if result:
-    print(json.loads(result))
+def fetch_detail(rel):
+    payload = {
+        'action': 'viewsmedia',
+        'mediaid': rel[0],
+        'mediatype': 1,
+    }
+    r = requests.post(detail_url,
+                      data=payload,
+                      headers=headers)
+    text = r.text
+    print(text)
+    text = re.match('{ .*? }', text)
+    print(text)
+
+
+    # soup = BeautifulSoup(text, features="html.parser")
+    #
+    # flag = soup.find('<!DOCTYPE')
+    # print(soup)
+    # time.sleep(1)
+
+
+def get_detail(tr_list):
+    for item in tr_list:
+        bnt = item.find('div', {'class', 'bnt'})
+        rela = bnt.find('a', {'class', 'viewsmedia'})
+        rel = rela['rel']
+
+        name = item.find('h3')
+        name = name.find('a').text
+
+        fetch_detail(rel)
+
+
+def get_list():
+    for index in range(2):
+        page = index + 1
+        payload = {
+            'pagesize': 20,
+            'pagenumber': page,
+            'keywords': '',
+            'category': '0',
+            'portal': 0,
+            'area': 0,
+            'prange': '0,100000000',
+            'record': 0,
+            'cansend': 0,
+            'linktype': 0,
+            'media_u_type': 0,
+            'orderby': 'listorder DESC'
+        }
+
+        r = requests.post(url, data=payload,
+                          headers=headers
+                          )
+
+        text = r.text
+        text = json.loads(text)
+        data = text['datalist']
+
+        soup = BeautifulSoup(data, features="html.parser")
+        tr_list = soup.find_all('tr')
+
+        time.sleep(1)
+
+        get_detail(tr_list)
+
+
+def main():
+    get_list()
+
+
+if __name__ == '__main__':
+    main()
