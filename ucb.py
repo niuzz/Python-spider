@@ -2,7 +2,13 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import time
-import re
+import pymysql
+
+db = pymysql.connect(host='127.0.0.1', port=8889, user='root', passwd='root', db='article')
+
+cursor = db.cursor()
+
+obj = {}
 
 url = 'https://www.uchuanbo.com/member/ajax/news_list.php'
 detail_url = 'https://www.uchuanbo.com/member/ajax/mediaaction.php'
@@ -23,6 +29,24 @@ headers = {
 }
 
 
+def save2Mysql():
+    # sql = "INSERT INTO temp_news_media(name, mcid, desc, type, direct_price, case, trade_category, district, record_type, send_media, interlinkage_type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    #     (obj['name'], obj['mcid'], obj['desc'], obj['type'], obj['direct_price'], obj['case'], obj['trade_category'], obj['district'], obj['record_type'], obj['send_media'], obj['interlinkage_type'])
+
+    sql = "INSERT INTO temp_news_media(name, mcid, direct_price, type, trade_category, district, record_type, send_media, interlinkage_type, case_link, media_desc)" \
+          "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
+
+    try:
+        cursor.execute(sql, (obj['name'], obj['mcid'], obj['direct_price'], obj['type'], obj['trade_category'], obj['district'], obj['record_type'], obj['send_media'], obj['interlinkage_type'], obj['case'], obj['desc']))
+        db.commit()
+    except pymysql.InternalError as error:
+        code, message = error.args
+        print(">>>>>>>>>>>>>", code, message)
+        db.rollback()
+    print(obj)
+
+
 def fetch_detail(rel):
     payload = {
         'action': 'viewsmedia',
@@ -32,17 +56,30 @@ def fetch_detail(rel):
     r = requests.post(detail_url,
                       data=payload,
                       headers=headers)
+    r.encoding = 'utf8'
     text = r.text
-    print(text)
-    text = re.match('{ .*? }', text)
-    print(text)
+    try:
+        text = json.loads(text)
+    except:
+        obj['interlinkage_type'] = ''
+        obj['type'] = ''
+        obj['send_media'] = ''
+        save2Mysql()
+    else:
+        text = text['contacthtml']
 
+        soup = BeautifulSoup(text, features="html.parser")
+        table = soup.find('table')
+        tds = table.find_all('td')
+        obj['interlinkage_type'] = tds[7].text
+        obj['type'] = tds[2].text
+        obj['trade_category'] = tds[2].text
+        str = tds[8].find('em').text + ',' + tds[9].find('em').text
+        obj['send_media'] = str
 
-    # soup = BeautifulSoup(text, features="html.parser")
-    #
-    # flag = soup.find('<!DOCTYPE')
-    # print(soup)
-    # time.sleep(1)
+        save2Mysql()
+
+    time.sleep(1)
 
 
 def get_detail(tr_list):
@@ -53,13 +90,53 @@ def get_detail(tr_list):
 
         name = item.find('h3')
         name = name.find('a').text
+        obj['name'] = name
+
+        case = item.find('div', {'class', 'text'})
+        case = case.find('p')
+        case = case.find('a')
+        case = case['href']
+        obj['case'] = case
+
+        price = item.find('td', {'class', 'price'}).text
+        price = price.split('￥')[1]
+        try:
+            price = float(price)
+        except ValueError:
+            price = 0.0
+        obj['direct_price'] = price
+
+        tds = item.find_all('td')
+
+        mid_str = tds[3].text
+        obj['type'] = tds[3].text
+        mcid = 0
+        if mid_str == '综合门户':
+            mcid = 0
+        elif mid_str == '中央媒体':
+            mcid = 1
+        elif mid_str == '地方门户':
+            mcid = 2
+        elif mid_str == '垂直媒体':
+            mcid = 3
+        elif mid_str == '中小媒体':
+            mcid = 4
+        elif mid_str == '自媒体':
+            mcid = 5
+
+        obj['mcid'] = mcid
+        obj['record_type'] = tds[4].text
+        obj['district'] = tds[5].text
+        desc = tds[6].text
+        obj['desc'] = desc.strip()
 
         fetch_detail(rel)
 
 
 def get_list():
-    for index in range(2):
+    for index in range(410):
         page = index + 1
+        print('========================' + str(page) + '==============================')
         payload = {
             'pagesize': 20,
             'pagenumber': page,
@@ -91,8 +168,12 @@ def get_list():
         get_detail(tr_list)
 
 
+
+
 def main():
     get_list()
+    db.close()
+    print('-------close db-------')
 
 
 if __name__ == '__main__':
