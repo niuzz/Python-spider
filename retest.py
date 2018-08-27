@@ -7,4 +7,7 @@ str = str.replace("\\", "")
 print(str)
 s = re.match('{(.*?)}', str)
 
+
+astr = '<br />'
+s = re.match('.*?<br />.*?', astr)
 print(s)
