@@ -4,6 +4,7 @@ import time
 import requests
 import json
 import pymysql
+import os
 
 exitFlag = 0
 
@@ -26,16 +27,20 @@ headers = {
     'Connection': 'keep-alive',
     'Content-Length': '86',
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'Cookie': 'Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227; _gscu_867320846=35093227ewx2rx38; _gscbrs_867320846=1; loginHistoryRecorded=0; TY_SESSION_ID=029480d3-77c7-48af-b0f0-0edf2d45623c; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; Hm_lpvt_29d7c655e7d1db886d67d7b9b3846aca=1535201484; Hm_lpvt_b96f95878b55be2cf49fb3c099aea393=1535201485; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535093500,1535201562; username=; rememberusername=; PHPSESSID=j8c5cr4888g8ovv6dlakk8e8p6; aLastLoginTime=1535439733; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-08-28T07%3A02%3A47.071Z; TRACK_SESSION_ID=4a8b57923fab87474507c2137f449330; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1535439777; _gscs_867320846=t354397427cydi010|pv:3',
+    'Cookie': 'Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227; _gscu_867320846=35093227ewx2rx38; _gscbrs_867320846=1; loginHistoryRecorded=0; TY_SESSION_ID=029480d3-77c7-48af-b0f0-0edf2d45623c; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; username=; rememberusername=; PHPSESSID=j8c5cr4888g8ovv6dlakk8e8p6; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-08-28T07%3A02%3A47.071Z; TRACK_SESSION_ID=4a8b57923fab87474507c2137f449330; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; Hm_lpvt_29d7c655e7d1db886d67d7b9b3846aca=1535509121; Hm_lpvt_b96f95878b55be2cf49fb3c099aea393=1535509121; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535093500,1535201562,1535509128; contactMain=1; aLastLoginTime=1535582103; _gscs_867320846=t35582099kwfbcd90|pv:2; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1535582141',
     'Host': 'chuanbo.weiboyi.com',
     'Origin': 'http://chuanbo.weiboyi.com',
-    'Referer': 'http://chuanbo.weiboyi.com/hworder/weixin/index?price_list=top%2Csecond%2Cother%2Csingle&start=0&limit=20&pageUrl=http%3A%2F%2Fchuanbo.weiboyi.com%2Fhworder%2Fweixin%2Findex%3Fprice_list%3Dtop%252Csecond%252Cother%252Csingle%26start%3D60%26limit%3D20%26pageUrl%3Dhttp%253A%252F%252Fchuanbo.weiboyi.com%252Fhworder%252Fweixin%252Findex%253Fprice_list%253Dtop%25252Csecond%25252Cother%25252Csingle%2526start%253D40%2526limit%253D20%26referrerUrl%3Dhttp%253A%252F%252Fchuanbo.weiboyi.com%252F%26app_id%3D2%26err_msg%3Derror&referrerUrl=http%3A%2F%2Fchuanbo.weiboyi.com%2F&app_id=2&err_msg=error',
+    'Referer': 'http://chuanbo.weiboyi.com/hworder/weixin/index',
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest',
     'X-Tingyun-Id': 'y5zrBHz_BzQ;r=439778058',
 }
 
 count = 1
+
+folder_path = './images/wechat'
+
+qr_folder_path = './images/wechat_qrcode'
 
 
 class weibyThread(threading.Thread):
@@ -56,14 +61,15 @@ def save2mysql(obj):
 
     cursor = db.cursor()
     global count
-    sql = "INSERT INTO wechat_media(name, fans, headline_price, not_headline_price, wechat_number, qrcode, category, headline_data, not_headline_data, top)" \
-          "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    sql = "INSERT INTO temp_wechat_media(name, fans, headline_price, not_headline_price, wechat_number, qrcode, category, headline_data, not_headline_data, article, media_img, media_read)" \
+          "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     try:
+
         cursor.execute(sql, (
             obj['name'], obj['fans'], obj['headline_price'], obj['not_headline_price'], obj['wechat_number'],
-            obj['qrcode'], obj['category'], obj['headline_data'], obj['not_headline_data'], str(obj['top'])))
-        article_wmid = cursor.lastrowid
+            obj['qrcode'], obj['category'], obj['headline_data'], obj['not_headline_data'],
+            str(obj['article']), obj['media_img'], obj['read']))
         db.commit()
         time.sleep(1)
     except pymysql.InternalError as error:
@@ -73,6 +79,40 @@ def save2mysql(obj):
 
     print(str(count) + ':>>>>>>>>>>>>>' + str(obj))
     count += 1
+
+
+def save_img(obj):
+    try:
+        requests.get(obj['media_img'])
+    except:
+        obj['media_img'] = ''
+        print(obj['name'] + '没得头像')
+    else:
+        html = requests.get(obj['media_img'])
+        arr = obj['media_img'].split('/')
+        face_name = arr[len(arr) - 1]
+        with open('./images/wechat/' + face_name, 'wb') as file:  # 以byte形式将图片数据写入
+            file.write(html.content)
+            file.flush()
+        file.close()
+        obj['media_img'] = '/images/wechat/' + face_name
+
+
+def save_qrcode(obj):
+    try:
+        requests.get(obj['qrcode'])
+    except:
+        obj['qrcode'] = ''
+        print(obj['name'] + '没得二维码')
+    else:
+        html = requests.get(obj['qrcode'])
+        arr = obj['qrcode'].split('/')
+        qr_name = arr[len(arr) - 1]
+        with open('./images/wechat_qrcode/' + qr_name, 'wb') as file:  # 以byte形式将图片数据写入
+            file.write(html.content)
+            file.flush()
+        file.close()
+        obj['qrcode'] = '/images/wechat_qrcode/' + qr_name
 
 
 def get_top10(params,
@@ -107,7 +147,7 @@ def get_top10(params,
         if tr_code == 1000:
             lists.append(tt['data'])
 
-    obj['top'] = lists
+    obj['article'] = lists
 
 
 def get_read_num(params,
@@ -124,7 +164,6 @@ def get_read_num(params,
         obj['hotword'] = ''
         obj['trademark'] = ''
     else:
-        print('hot' + str(ht['code']))
         hr_code = ht['code']
         if hr_code == 1000:
             if ht['data']:
@@ -146,7 +185,6 @@ def get_read_num(params,
         obj['headline_data'] = ''
         obj['not_headline_data'] = ''
     else:
-        print('90days' + str(bt['code']))
         bt_code = bt['code']
         if bt_code == 1000:
             # 90头条最高阅读数
@@ -185,7 +223,6 @@ def get_category_tag(params,
     except:
         obj['category'] = ''
     else:
-        print('category_tag' + str(t['code']))
         tags = t['data']['type_tags']
         tag_str = ''
         for tag in tags:
@@ -217,66 +254,101 @@ def get_item_detail(item, obj):
 
     get_top10(params, detail_headers, obj)
 
+    save_img(obj)
+
+    save_qrcode(obj)
+
     save2mysql(obj)
 
 
 def get_list_item(list):
-    for m in list:
-        obj = {}
-        item = m['cells']
-        obj['name'] = item['original_weibo_name']
-        item_fans = str(item['followers_count']).split('万')[0]
-        obj['fans'] = float(item_fans.replace(',', ''))
-
-        if (item['quote']):
+    try:
+        len(list)
+    except:
+        print('list------------------------>' + str(list))
+    else:
+        for m in list:
+            obj = {}
+            item = m['cells']
+            obj['name'] = item['original_weibo_name']
             try:
-                item['quote']['multi_top_original_writing']
+                fans_index = str(item['followers_count']).index('万')
             except:
-                try:
-                    item['external_reference_price']
-                except:
-                    obj['headline_price'] = 0.0
-                    obj['not_headline_price'] = 0.0
-                else:
-                    obj['headline_price'] = item['external_reference_price']['multi_top_original_writing']['quote']
-                    obj['not_headline_price'] = item['external_reference_price']['multi_second_original_writing'][
-                        'quote']
+                obj['fans'] = int(item['followers_count'])
             else:
-                if (item['quote']['multi_top_original_writing'] > item['quote']['multi_top'] ):
-                    obj['headline_price'] = item['quote']['multi_top_original_writing']
-                    obj['not_headline_price'] = item['quote']['multi_second_original_writing']
+                if fans_index > 0:
+                    item_fans = str(item['followers_count']).split('万')
+                    fans_str = item_fans[0].replace(',', '')
+                    fans = float(fans_str) * 10000
+                    fans = int(fans)
+                    obj['fans'] = fans
+
                 else:
+                    obj['fans'] = int(item['followers_count'])
+
+            try:
+                item['msgitem_top_avg_read_num_28d']
+            except:
+                obj['read'] = 0
+            else:
+                obj['read'] = int(item['msgitem_top_avg_read_num_28d'])
+
+            if item['quote']:
+                try:
+                    item['quote']['multi_top_original_writing']
+                except:
                     try:
                         item['quote']['multi_graphic_top_price']
                     except:
-                        obj['headline_price'] = item['quote']['multi_top']
-                        obj['not_headline_price'] = item['quote']['multi_second']
+                        obj['headline_price'] = item['external_reference_price']['multi_top_original_writing']['quote']
+                        obj['not_headline_price'] = item['external_reference_price']['multi_second_original_writing'][
+                            'quote']
                     else:
+
                         obj['headline_price'] = item['quote']['multi_graphic_top_price']
                         obj['not_headline_price'] = item['quote']['multi_graphic_second_price']
+                else:
+                    if item['quote']['multi_top_original_writing'] > item['quote']['multi_top']:
+                        obj['headline_price'] = item['quote']['multi_top_original_writing']
+                        obj['not_headline_price'] = item['quote']['multi_second_original_writing']
+                    else:
+                        try:
+                            item['quote']['multi_graphic_top_price']
+                        except:
+                            obj['headline_price'] = item['quote']['multi_top']
+                            obj['not_headline_price'] = item['quote']['multi_second']
+                        else:
+                            obj['headline_price'] = item['quote']['multi_graphic_top_price']
+                            obj['not_headline_price'] = item['quote']['multi_graphic_second_price']
 
-        else:
-            if(item['external_reference_price']):
-                obj['headline_price'] = item['external_reference_price']['multi_top_original_writing']['quote']
-                obj['not_headline_price'] = item['external_reference_price']['multi_second_original_writing']['quote']
             else:
-                obj['headline_price'] = 0.0
-                obj['not_headline_price'] = 0.0
 
-        obj['wechat_number'] = item['weibo_id']
-        try:
-            item['screen_shot_qr_code']
-        except:
-            obj['qrcode'] = ''
-        else:
-            obj['qrcode'] = item['screen_shot_qr_code']
+                if item['external_reference_price']:
+                    obj['headline_price'] = item['external_reference_price']['multi_top_original_writing']['quote']
+                    obj['not_headline_price'] = item['external_reference_price']['multi_second_original_writing']['quote']
+                else:
+                    obj['headline_price'] = 0.0
+                    obj['not_headline_price'] = 0.0
 
-        get_item_detail(item, obj)
+            obj['wechat_number'] = item['weibo_id']
+            if item['face_url']:
+
+                obj['media_img'] = item['face_url']
+            else:
+                obj['media_img'] = item['account_avatar']
+            try:
+                item['screen_shot_qr_code']
+            except:
+                obj['qrcode'] = ''
+            else:
+                obj['qrcode'] = item['screen_shot_qr_code']
+
+            get_item_detail(item, obj)
 
 
 def get_list_action(page):
     payload = {
-        'web_csrf_token': '5b84f375429a2',
+        'web_csrf_token': '5b871f976bfbb',
         'price_list': 'top, second, other, single',
         'snbt_exponent_sort': 'DESC',
         'start': page * 20,
@@ -301,7 +373,6 @@ def get_list_action(page):
             rows = t['data']['rows']
             get_list_item(rows)
     else:
-        print(r.text)
         t = r.text
         t = json.loads(t)
         code = t['code']
@@ -316,6 +387,12 @@ def get_list(i):
 
 
 def process_data(threadName, q):
+    if os.path.exists(folder_path) == False:  # 判断文件夹是否已经存在
+        os.makedirs(folder_path)
+
+    if os.path.exists(qr_folder_path) == False:  # 判断文件夹是否已经存在
+        os.makedirs(qr_folder_path)
+
     while not exitFlag:
         queueLock.acquire()
         if not workQueue.empty():
