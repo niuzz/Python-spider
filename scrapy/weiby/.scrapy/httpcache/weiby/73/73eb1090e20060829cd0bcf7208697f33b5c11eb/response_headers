@@ -1,0 +1,13 @@
+Server: nginx/1.10.3
+Date: Wed, 05 Sep 2018 06:22:37 GMT
+Content-Type: application/json; charset=utf-8
+Vary: Accept-Encoding
+X-Powered-By: PHP/5.6.13
+P3P: CP="ALL ADM DEV PSAi COM OUR OTRo STP IND ONL"
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+Content-Encoding: gzip
+X-Cache: MISS from cloud
+X-Cache-Lookup: MISS from cloud:33385
+Via: 1.1 cloud (squid/3.5.20)

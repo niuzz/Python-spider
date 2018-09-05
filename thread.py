@@ -27,14 +27,16 @@ headers = {
     'Connection': 'keep-alive',
     'Content-Length': '86',
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'Cookie': 'Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227; _gscu_867320846=35093227ewx2rx38; _gscbrs_867320846=1; loginHistoryRecorded=0; TY_SESSION_ID=029480d3-77c7-48af-b0f0-0edf2d45623c; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; username=; rememberusername=; PHPSESSID=j8c5cr4888g8ovv6dlakk8e8p6; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-08-28T07%3A02%3A47.071Z; TRACK_SESSION_ID=4a8b57923fab87474507c2137f449330; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; Hm_lpvt_29d7c655e7d1db886d67d7b9b3846aca=1535509121; Hm_lpvt_b96f95878b55be2cf49fb3c099aea393=1535509121; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535093500,1535201562,1535509128; contactMain=1; aLastLoginTime=1535582103; _gscs_867320846=t35582099kwfbcd90|pv:2; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1535582141',
+    'Cookie': 'TY_SESSION_ID=f5cf6997-8de4-4b5f-9384-b8c892173d5a; _gscu_867320846=35093227ewx2rx38; loginHistoryRecorded=0; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; _gscbrs_867320846=1; username=; rememberusername=; Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227,1535947850,1536054247; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227,1535947850,1536054247; TY_SESSION_ID=533c08ad-b96b-4aae-8841-f62d9bd673fe; Hm_lpvt_29d7c655e7d1db886d67d7b9b3846aca=1536102233; Hm_lpvt_b96f95878b55be2cf49fb3c099aea393=1536102233; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535509128,1535882186,1536047576,1536102334; PHPSESSID=9krb074p9m0vsopeh7m0jfc950; aLastLoginTime=1536102321; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-09-04T23%3A05%3A59.263Z; TRACK_SESSION_ID=b9e9db51179caf466cc085fb3773d78a; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1536109185; _gscs_867320846=t36106486jooxxa19|pv:4',
     'Host': 'chuanbo.weiboyi.com',
     'Origin': 'http://chuanbo.weiboyi.com',
     'Referer': 'http://chuanbo.weiboyi.com/hworder/weixin/index',
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest',
-    'X-Tingyun-Id': 'y5zrBHz_BzQ;r=439778058',
+    'X-Tingyun-Id': 'y5zrBHz_BzQ;r=47832529',
 }
+
+proxies = {"http": "http://125.125.141.101:33385"}
 
 count = 1
 
@@ -139,7 +141,8 @@ def get_top10(params,
         tr = requests.get(
             article_top10,
             params=t_params,
-            headers=detail_headers
+            headers=detail_headers,
+            proxies=proxies,
         )
 
         tt = json.loads(tr.text)
@@ -156,7 +159,8 @@ def get_read_num(params,
     hr = requests.get(
         hotword_url,
         params=params,
-        headers=detail_headers
+        headers=detail_headers,
+        proxies=proxies,
     )
     try:
         ht = json.loads(hr.text)
@@ -176,7 +180,8 @@ def get_read_num(params,
     br = requests.get(
         base90,
         params=params,
-        headers=detail_headers
+        headers=detail_headers,
+        proxies=proxies,
     )
 
     try:
@@ -216,8 +221,10 @@ def get_category_tag(params,
     r = requests.get(
         detail_url,
         params=params,
-        headers=detail_headers
+        headers=detail_headers,
+        proxies=proxies,
     )
+
     try:
         t = json.loads(r.text)
     except:
@@ -236,7 +243,7 @@ def get_item_detail(item, obj):
     sign = arr[2].split('=')[1]
 
     detail_headers = {
-        'Cookie': 'Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227; _gscu_867320846=35093227ewx2rx38; _gscbrs_867320846=1; loginHistoryRecorded=0; TY_SESSION_ID=029480d3-77c7-48af-b0f0-0edf2d45623c; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; Hm_lpvt_29d7c655e7d1db886d67d7b9b3846aca=1535201484; Hm_lpvt_b96f95878b55be2cf49fb3c099aea393=1535201485; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535093500,1535201562; username=; rememberusername=; PHPSESSID=j8c5cr4888g8ovv6dlakk8e8p6; aLastLoginTime=1535439733; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-08-28T07%3A02%3A47.071Z; TRACK_SESSION_ID=4a8b57923fab87474507c2137f449330; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1535439777; _gscs_867320846=t354397427cydi010|pv:3',
+        'Cookie': 'TY_SESSION_ID=f5cf6997-8de4-4b5f-9384-b8c892173d5a; _gscu_867320846=35093227ewx2rx38; loginHistoryRecorded=0; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227,1535947850; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227,1535947850; PHPSESSID=i5nrgtgqpst7ur1nv62p9g6sb6; _gscbrs_867320846=1; username=; rememberusername=; aLastLoginTime=1536047509; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-09-04T07%3A52%3A55.230Z; TRACK_SESSION_ID=05a63a6aef644864ac3318ea7d0eabe2; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535201562,1535509128,1535882186,1536047576; _gscs_867320846=36047536lq52t010|pv:3; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1536047832',
         'Referer': 'http://chuanbo.weiboyi.com/reform/index',
         'User-Agen': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
     }
@@ -265,7 +272,7 @@ def get_list_item(list):
     try:
         len(list)
     except:
-        print('list------------------------>' + str(list))
+        print('err in list------------------------>' + str(list))
     else:
         for m in list:
             obj = {}
@@ -347,8 +354,9 @@ def get_list_item(list):
 
 
 def get_list_action(page):
+
     payload = {
-        'web_csrf_token': '5b871f976bfbb',
+        'web_csrf_token': '5b8f0fb1da6a8',
         'price_list': 'top, second, other, single',
         'snbt_exponent_sort': 'DESC',
         'start': page * 20,
@@ -357,7 +365,8 @@ def get_list_action(page):
     try:
         r = requests.post(url,
                           data=payload,
-                          headers=headers
+                          headers=headers,
+                          proxies=proxies,
                           )
     except:
         time.sleep(10)
@@ -382,7 +391,7 @@ def get_list_action(page):
 
 
 def get_list(i):
-    print('================   ' + str(i) + '   =====================')
+    print('================   第' + str(i + 1) + '页   =====================')
     get_list_action(i)
 
 
@@ -410,7 +419,7 @@ threads = []
 threadID = 1
 
 # 创建新线程
-for tName in range(1, 51):
+for tName in range(1, 50):
     thread = weibyThread(threadID, "Thread" + str(tName), workQueue)
     thread.start()
     threads.append(thread)
@@ -418,7 +427,7 @@ for tName in range(1, 51):
 
 # 填充队列
 queueLock.acquire()
-for page in range(1, 1527):
+for page in range(0, 1098):
     workQueue.put(page)
 queueLock.release()
 

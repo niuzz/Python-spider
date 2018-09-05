@@ -1,0 +1,6 @@
+Server: nginx/1.10.3
+Date: Wed, 05 Sep 2018 07:40:58 GMT
+Content-Type: text/html
+X-Cache: MISS from cloud
+X-Cache-Lookup: MISS from cloud:33385
+Via: 1.1 cloud (squid/3.5.20)

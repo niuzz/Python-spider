@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>微播易 | 微播易广告主推广平台</title>
+    <link rel="stylesheet" type="text/css" href="/style/module/pages.css">
+</head>
+<body>
+<div style="padding:40px;margin-bottom:150px;border-bottom:1px solid #eee;">
+    <a href="/"><img src="/resources/images/logo/login_logo_v3_2x.png" height="58"/></a>
+</div>
+<div class="content">
+    <div class="errorPage">
+        <h2 class="errorPage_title">抱歉，你访问的地址出错啦</h2>
+        <p>页面出现的原因，可能是你访问的地址有错误</p>
+        <a href="/">立即返回</a>
+    </div>
+</div>
+<div class="footer clear">
+    <div class="content">
+        <a href="http://www.weiboyi.com/weiboyi_about.php" target='_blank' class="footer_menu footer_about">关于我们</a>
+        <a href="http://www.weiboyi.com/weiboyi_contact_us.php" target='_blank' class="footer_menu footer_contact">联系我们</a>
+        <a href="/hwrule" target="_self" class="footer_menu footer_service">服务条款</a>
+        版权所有 © 北京微播易科技股份有限公司 2011-<em class="js_thisYear"></em>.
+        <p>京ICP证：130126号. <b>|</b> 京ICP备：09047853号. <b>|</b> 北京市公安局朝阳分局网监中心备案编号：11010502023471. <b>|</b> 商标注册证：13594954号. 13594767号.</p>
+    </div>
+</div>
+</body>
+<script>
+    seajs.use('module/layout/bottom_this_year.js');
+</script>
+</html>

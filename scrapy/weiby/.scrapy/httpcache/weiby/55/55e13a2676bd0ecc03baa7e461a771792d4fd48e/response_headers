@@ -1,0 +1,14 @@
+Server: nginx/1.10.3
+Date: Wed, 05 Sep 2018 05:48:55 GMT
+Content-Type: text/html;charset=utf-8
+Vary: Accept-Encoding
+X-Powered-By: PHP/5.6.13
+P3P: CP="ALL ADM DEV PSAi COM OUR OTRo STP IND ONL"
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+X-Tingyun-Tx-Data: {"id":"C84-cGbIflk#hDc3qr0BT9w","action":"WebAction/URI/single%2Fwbyapi%2Fgetaccountbaseinfo","trId":"3e711faf064e93","r":115658164,"time":{"duration":112,"qu":0,"db":1,"rds":136814760,"code":0}}
+Content-Encoding: gzip
+X-Cache: MISS from cloud
+X-Cache-Lookup: MISS from cloud:33385
+Via: 1.1 cloud (squid/3.5.20)
