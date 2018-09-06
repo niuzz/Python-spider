@@ -1,7 +1,8 @@
 import scrapy
 import json
 from urllib.parse import urlencode
-from urllib.parse import urljoin
+import requests
+
 
 class WeibySpider(scrapy.Spider):
     name = "weiby"
@@ -14,41 +15,43 @@ class WeibySpider(scrapy.Spider):
         'Connection': 'keep-alive',
         'ContentLength': '110',
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Cookie': 'TY_SESSION_ID=f5cf6997-8de4-4b5f-9384-b8c892173d5a; _gscu_867320846=35093227ewx2rx38; loginHistoryRecorded=0; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; _gscbrs_867320846=1; username=; rememberusername=; Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227,1535947850,1536054247; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227,1535947850,1536054247; TY_SESSION_ID=533c08ad-b96b-4aae-8841-f62d9bd673fe; Hm_lpvt_29d7c655e7d1db886d67d7b9b3846aca=1536102233; Hm_lpvt_b96f95878b55be2cf49fb3c099aea393=1536102233; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535509128,1535882186,1536047576,1536102334; PHPSESSID=9krb074p9m0vsopeh7m0jfc950; aLastLoginTime=1536102321; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-09-04T23%3A05%3A59.263Z; TRACK_SESSION_ID=b9e9db51179caf466cc085fb3773d78a; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; contactMain=1; _gscs_867320846=t36113473ig7n1h19|pv:4; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1536115657',
+        'Cookie': '_gscu_867320846=35093227ewx2rx38; loginHistoryRecorded=0; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227,1535947850,1536054247,1536215671; Hm_lpvt_29d7c655e7d1db886d67d7b9b3846aca=1536215671; _gscbrs_867320846=1; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227,1535947850,1536054247,1536215672; Hm_lpvt_b96f95878b55be2cf49fb3c099aea393=1536215672; PHPSESSID=ip8r13plc236f41bk7h5f977k3; aLastLoginTime=1536215654; web_image_site=http%3A%2F%2Fimg.weiboyi.com; TY_SESSION_ID=dc9da2bb-e5b8-41a4-84e7-daf58e35ef1e; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-09-06T06%3A34%3A54.853Z; TRACK_SESSION_ID=446cc0f11aa464fa7d871ee916104a2a; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535882186,1536047576,1536102334,1536215695; _gscs_867320846=362156716i49yb19|pv:4; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1536215721',
         'Host': 'chuanbo.weiboyi.com',
         'Origin': 'http://chuanbo.weiboyi.com',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6)' +
+        ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
         'X-Requested-With': 'XMLHttpRequest',
         'X-Tingyun-Id': 'y5zrBHz_BzQ;r=115658164',
     }
 
     detail_headers = {
-        'Cookie': '_gscu_867320846=35093227ewx2rx38; loginHistoryRecorded=0; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; _gscbrs_867320846=1; username=; rememberusername=; Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227,1535947850,1536054247; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227,1535947850,1536054247; TY_SESSION_ID=533c08ad-b96b-4aae-8841-f62d9bd673fe; Hm_lpvt_29d7c655e7d1db886d67d7b9b3846aca=1536102233; Hm_lpvt_b96f95878b55be2cf49fb3c099aea393=1536102233; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535509128,1535882186,1536047576,1536102334; PHPSESSID=9krb074p9m0vsopeh7m0jfc950; aLastLoginTime=1536102321; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-09-04T23%3A05%3A59.263Z; TRACK_SESSION_ID=b9e9db51179caf466cc085fb3773d78a; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; contactMain=1; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1536123584; _gscs_867320846=t36117798h5oe0819|pv:1',
+        'Cookie': '_gscu_867320846=35093227ewx2rx38; loginHistoryRecorded=0; TRACK_DETECTED=1.0.1; TRACK_BROWSER_ID=fba350e3683cfa9f188aad89a0cfd5ea; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22468783%22%2C%22%24device_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%2C%22first_id%22%3A%221656aaff9d460-056137705612f9-34677908-1296000-1656aaff9d5255%22%7D; Hm_lvt_29d7c655e7d1db886d67d7b9b3846aca=1535093227,1535947850,1536054247,1536215671; Hm_lpvt_29d7c655e7d1db886d67d7b9b3846aca=1536215671; _gscbrs_867320846=1; Hm_lvt_b96f95878b55be2cf49fb3c099aea393=1535093227,1535947850,1536054247,1536215672; Hm_lpvt_b96f95878b55be2cf49fb3c099aea393=1536215672; PHPSESSID=ip8r13plc236f41bk7h5f977k3; aLastLoginTime=1536215654; web_image_site=http%3A%2F%2Fimg.weiboyi.com; TY_SESSION_ID=dc9da2bb-e5b8-41a4-84e7-daf58e35ef1e; TRACK_USER_ID=468783; TRACK_IDENTIFY_AT=2018-09-06T06%3A34%3A54.853Z; TRACK_SESSION_ID=446cc0f11aa464fa7d871ee916104a2a; Hm_lvt_5ff3a7941ce54a1ba102742f48f181ab=1535882186,1536047576,1536102334,1536215695; _gscs_867320846=362156716i49yb19|pv:4; Hm_lpvt_5ff3a7941ce54a1ba102742f48f181ab=1536215721',
         'Referer': 'http://chuanbo.weiboyi.com/reform/index',
         'User-Agen': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
     }
 
     payload = {
-        'web_csrf_token': '5b8f0fb1da6a8',
+        'web_csrf_token': '5b90ca6634596',
         'price_list': 'top, second, other, single',
         'snbt_exponent_sort': 'DESC',
-        'start': 100 * 100,
-        'limit': 100
+        'start': 0 * 100,
+        'limit': 20
     }
     payload = urlencode(payload)
 
     def start_requests(self):
         url = 'http://chuanbo.weiboyi.com/hworder/weixin/filterlist/source/all'
-
+        url1 = 'http://chuanbo.weiboyi.com/hworder/weixin/index?price_list=top%2Csecond%2Cother%2Csingle&snbt_exponent_sort=DESC&start=0&limit=20'
         yield scrapy.Request(
             url=url,
             headers=self.headers,
-            meta={'cookiejar': self.headers['Cookie'], 'proxy': 'http://125.125.141.101:33385'},
+            meta={'cookiejar': self.headers['Cookie'],
+                  'proxy': 'http://122.230.37.40:26431'},
             method='POST',
             body=self.payload,
             callback=self.parse,
             errback=self.err_parse,
-            )
+        )
 
     def parse(self, response):
         result = json.loads(response.text)
@@ -103,9 +106,10 @@ class WeibySpider(scrapy.Spider):
             encode_payload = urlencode(payload)
 
             yield scrapy.Request(
-                url='http://chuanbo.weiboyi.com/single/wbyapi/getaccountbaseinfo?' + encode_payload,
+                url='http://chuanbo.weiboyi.com/single/wbyapi/' +
+                'getaccountbaseinfo?' + encode_payload,
                 headers=self.detail_headers,
-                meta={'proxy': 'http://125.125.141.101:33385',
+                meta={'proxy': 'http://122.230.37.40:26431',
                       'item': item,
                       'payload': encode_payload,
                       'decode_payload': payload
@@ -131,7 +135,7 @@ class WeibySpider(scrapy.Spider):
         yield scrapy.Request(
             url='http://chuanbo.weiboyi.com/single/wbyapi/getaccountactinfo?' + payload,
             headers=self.detail_headers,
-            meta={'proxy': 'http://125.125.141.101:33385',
+            meta={'proxy': 'http://122.230.37.40:26431',
                   'item': item,
                   'payload': payload,
                   'decode_payload': response.meta['decode_payload']
@@ -155,7 +159,7 @@ class WeibySpider(scrapy.Spider):
         yield scrapy.Request(
             url='http://chuanbo.weiboyi.com/single/wbyapi/getbaseshuju?' + payload,
             headers=self.detail_headers,
-            meta={'proxy': 'http://125.125.141.101:33385',
+            meta={'proxy': 'http://122.230.37.40:26431',
                   'item': item,
                   'payload': payload,
                   'decode_payload': response.meta['decode_payload']
@@ -199,27 +203,22 @@ class WeibySpider(scrapy.Spider):
         for i in order_list:
             t_params = response.meta['decode_payload']
             t_params['order_by'] = i
-            payload = urlencode(t_params)
-
-            yield scrapy.Request(
-                url='http://chuanbo.weiboyi.com/single/wbyapi/getarticlestop10?' + payload,
+            article_top10 = 'http://chuanbo.weiboyi.com/single/wbyapi/getarticlestop10'
+            tr = requests.get(
+                article_top10,
+                params=t_params,
                 headers=self.detail_headers,
-                meta={'proxy': 'http://125.125.141.101:33385',
-                      'item': item,
-                      'articles': articles,
-                      },
-                method='GET',
-                callback=self.parse_article10,
-                errback=self.err_parse
+                proxies={'http': 'http://122.230.37.40:26431'},
             )
 
-    def parse_article10(self, response):
-        articles = response.meta['articles']
-        item = response.meta['item']
-        json_str = json.loads(response.text)
-        articles.append(json_str['data'])
+            tt = json.loads(tr.text)
+            tr_code = tt['code']
+            if tr_code == 1000:
+                articles.append(tt['data'])
+
         item['article'] = articles
         yield item
+
 
     def err_parse(self, response):
         print('---------------------->>>>>>list error ')
