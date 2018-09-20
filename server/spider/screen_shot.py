@@ -1,16 +1,17 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import time
+import json
 
 
 class Screen_Shot(object):
     def __init__(self):
         pass
 
-    def run(self, keyword):
+    def run(self, keyword, aid):
         begin = time.time()
         driver = self.get_chrome()
-        result = self.get_screen_shot(driver, keyword)
+        result = self.get_screen_shot(driver, keyword, aid)
         total = time.time() - begin
         return result
 
@@ -23,28 +24,29 @@ class Screen_Shot(object):
         driver.set_window_size(*window_size)
         return driver
 
-    def get_screen_shot(self, driver, keyword):
+    def get_screen_shot(self, driver, keyword, aid):
         # 新闻源收录
         driver.get("https://www.baidu.com/s?rtt=1&bsst=1&cl=2&tn=news&word=%s" % keyword)
         time.sleep(3)
         elem = driver.find_elements_by_class_name("result")
         if len(elem) > 1:
-            return '匹配不精确'
-        if elem:
-            self.run_js(driver)
-            return 'file-ok'
-        # 网页收录
+            return None
         else:
-            driver.get("https://www.baidu.com/s?&wd=%s&ie=utf-8" % keyword)
-            elem = driver.find_elements_by_class_name("result")
             if elem:
-                self.run_js(driver)
-                return 'file-ok'
+                img_url = self.run_js(driver, aid)
+                return json.dumps({'aid': aid, 'type': 'news', 'img_url': img_url})
+            # 网页收录
             else:
-                return '没有收录'
-                pass
+                driver.get("https://www.baidu.com/s?&wd=%s&ie=utf-8" % keyword)
+                elem = driver.find_elements_by_class_name("result")
+                if elem:
+                    img_url = self.run_js(driver, aid)
+                    return json.dumps({'aid': aid, 'type': 'web', 'img_url': img_url})
+                else:
+                    return None
+                    pass
 
-    def run_js(self, driver):
+    def run_js(self, driver, aid):
         driver.execute_script(
             """
             (function(){
@@ -55,4 +57,11 @@ class Screen_Shot(object):
             })()
             """
         )
-        driver.save_screenshot('1.png')
+        file_name = aid + '_' + str(self.now_time())
+        driver.save_screenshot('./images/%s.png' % file_name)
+        return '/images/%s.png' % file_name
+
+    def now_time(self):
+        t = time.time()
+        get_time = lambda: int(round(t * 1000))
+        return get_time()
