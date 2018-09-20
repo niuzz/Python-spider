@@ -30,21 +30,20 @@ class Screen_Shot(object):
         time.sleep(3)
         elem = driver.find_elements_by_class_name("result")
         if len(elem) > 1:
-            return None
+            return json.dumps({'type': 'None', 'aid': aid})
         else:
             if elem:
                 img_url = self.run_js(driver, aid)
-                return json.dumps({'aid': aid, 'type': 'news', 'img_url': img_url})
+                return json.dumps({'type': 'news', 'aid': aid, 'img_url': img_url})
             # 网页收录
             else:
                 driver.get("https://www.baidu.com/s?&wd=%s&ie=utf-8" % keyword)
                 elem = driver.find_elements_by_class_name("result")
                 if elem:
                     img_url = self.run_js(driver, aid)
-                    return json.dumps({'aid': aid, 'type': 'web', 'img_url': img_url})
+                    return json.dumps({'type': 'web', 'aid': aid, 'img_url': img_url})
                 else:
-                    return None
-                    pass
+                    return json.dumps({'type': 'None', 'aid': aid})
 
     def run_js(self, driver, aid):
         driver.execute_script(
@@ -62,6 +61,9 @@ class Screen_Shot(object):
         return '/images/%s.png' % file_name
 
     def now_time(self):
-        t = time.time()
-        get_time = lambda: int(round(t * 1000))
+        get_time = self.timestamp()
         return get_time()
+
+    def timestamp(self):
+        t = time.time()
+        return lambda: int(round(t * 1000))

@@ -3,6 +3,7 @@ import json
 from bs4 import BeautifulSoup
 import time
 import pymysql
+from concurrent.futures import ThreadPoolExecutor
 import os
 import queue
 import threading
@@ -28,6 +29,7 @@ class UcbSpider:
         self.img_base_url = img_base_url
         self.headers = headers
         self.proxy = proxy
+        self.pool = ThreadPoolExecutor(20)
 
     def run(self):
         print('run')
@@ -67,8 +69,13 @@ class UcbSpider:
         data = text['datalist']
         soup = BeautifulSoup(data, features="html.parser")
         tr_list = soup.find_all('tr')
+        self.thread_parse_detail(tr_list)
+        print('done')
+
+    def thread_parse_detail(self, tr_list):
         for item in tr_list:
-            self.parse_detail(item)
+            self.pool.submit(self.parse_detail, item)
+
 
     def parse_detail(self, item):
         obj = {}
@@ -106,10 +113,22 @@ class UcbSpider:
         img_origin_url = tds[1].find('div', {'class', 'img'}).find('img')['src']
         fetch_img_url = self.img_base_url + img_origin_url
 
-        self.fetch_img(fetch_img_url)
+        self.fetch_img(fetch_img_url, obj)
 
-    def fetch_img(self, fetch_img_url):
-        print(fetch_img_url)
+    def fetch_img(self, fetch_img_url, obj):
+        try:
+            fetch_img_url
+        except:
+            obj['media_img'] = ''
+        else:
+            html = requests.get(fetch_img_url, proxies=proxy)
+            arr = fetch_img_url.split('/')
+            face_name = arr[len(arr) -1]
+            with open(folder_path + face_name, 'wb') as file:
+                file.write(html.content)
+                file.flush()
+            file.close()
+            obj['media_img'] = '/images/news-images/' + face_name
 
 
 if __name__ == '__main__':
